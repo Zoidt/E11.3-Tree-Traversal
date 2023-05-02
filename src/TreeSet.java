@@ -248,16 +248,26 @@ public class TreeSet<T extends Comparable<T>> implements Set<T> {
 	}
 
 	public List<T> toListInOrder() {
-		List<T> elements = new ArrayList<>();
+		List<T> accumulator = new ArrayList<>();
 
-		toListInOrder(root, elements);
+		toListInOrder(root, accumulator);
 
-		return elements;
+		return accumulator;
 	}
 
-	private void toListInOrder(Node<T> current, List<T> elements) {
+	private void toListInOrder(Node<T> current, List<T> accumulator) {
 		// TODO
+		if(current == null)
+			return;
+
+		toListInOrder(current.left, accumulator);
+		accumulator.add(current.element);
+		toListInOrder(current.right, accumulator);
 	}
+
+
+
+
 
 	public void prettyPrintPreOrder() {
 		prettyPrintPreOrder(root, 0, "");
@@ -294,16 +304,26 @@ public class TreeSet<T extends Comparable<T>> implements Set<T> {
 		// Hint: https://stackoverflow.com/a/8964370
 	}
 
-	public List<T> subset(T min, T max) {
-		List<T> subset = new ArrayList<>();
-
-		subset(root, min, max, subset);
-
-		return subset;
+	public List<T> subset(T low, T high){
+		List<T> accumulator = new ArrayList<>();
+		subset(root, accumulator, low, high);
+		return accumulator;
 	}
+	public void subset(Node<T> current, List<T> accumulator, T low, T high) {
+		if(current == null)
+			return;
 
-	private void subset(Node<T> current, T min, T max, List<T> subset) {
-		// TODO
+		int compareLow = low.compareTo(current.element);
+		if(compareLow < 0)
+			subset(current.left, accumulator, low, high);
+
+		int compareHigh = current.element.compareTo(high);
+		if(compareLow <=0 && compareHigh < 0)
+			accumulator.add(current.element);
+
+		if(compareHigh <= 0)
+			subset(current.right, accumulator, low, high);
+
 	}
 
 	@Override
